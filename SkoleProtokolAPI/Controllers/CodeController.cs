@@ -9,13 +9,20 @@ using SkoleProtokolAPI.Generator;
 
 namespace SkoleProtokolAPI.Controllers
 {
-    [Route("api/Code")]
+    /// <summary>
+    /// The api controller that handles Attendance codes
+    /// </summary>
+    [Route("api/AttendanceCode")]
     [ApiController]
     public class CodeController : ControllerBase
     {
         // GET: api/<CodeController>
+        /// <summary>
+        /// Starts the process of code generation and returns the generated code in a HTTP-response 
+        /// </summary>
+        /// <returns>The newly generated attendanceCode as a string</returns>
         [HttpGet]
-        public string Get()
+        public string GenerateAttendanceCode()
         {
             string attendanceCode = AttendanceCodeGenerator.GenerateAttendanceCode();
             return attendanceCode;
