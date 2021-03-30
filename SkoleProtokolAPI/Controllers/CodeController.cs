@@ -21,7 +21,7 @@ namespace SkoleProtokolAPI.Controllers
 
         #region InstanceFields
 
-        private readonly ConcurrentQueue<ActiveAttendanceCode> _activeAttendanceCodes = new ConcurrentQueue<ActiveAttendanceCode>();
+        private static readonly ConcurrentQueue<ActiveAttendanceCode> _activeAttendanceCodes = new ConcurrentQueue<ActiveAttendanceCode>();
 
         #endregion
 
