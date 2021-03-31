@@ -9,6 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using SkoleProtokolAPI.Services;
+using SkoleProtokolLibrary.Interfaces;
+using SkoleProtokolLibrary.Models;
 
 namespace SkoleProtokolAPI
 {
@@ -24,6 +28,16 @@ namespace SkoleProtokolAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            // Requires using Microsoft.Extensions.Options
+            services.Configure<RollCallDatabaseSettings>(
+                Configuration.GetSection(nameof(RollCallDatabaseSettings)));
+
+            services.AddSingleton<IRollCallDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<RollCallDatabaseSettings>>().Value);
+
+            services.AddSingleton<RollCallService>();
+
             services.AddControllers();
         }
 
