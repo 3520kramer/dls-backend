@@ -4,8 +4,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MongoDB.Driver;
 using SkoleProtokolAPI.ActiveTimer;
 using SkoleProtokolAPI.Generator;
+using SkoleProtokolLibrary.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,7 +24,7 @@ namespace SkoleProtokolAPI.Controllers
         #region InstanceFields
 
         private static readonly ConcurrentQueue<ActiveAttendanceCode> _activeAttendanceCodes = new ConcurrentQueue<ActiveAttendanceCode>();
-
+        private readonly IMongoCollection<User> _userCollection;
         #endregion
 
 
