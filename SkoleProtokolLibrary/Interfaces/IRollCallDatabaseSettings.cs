@@ -4,13 +4,24 @@ using System.Text;
 
 namespace SkoleProtokolLibrary.Interfaces
 {
+    /// <summary>
+    /// Defines required fields for a RollCallDatabaseSettings object.
+    /// </summary>
     public interface IRollCallDatabaseSettings
     {
 
         #region Properties
-
+        /// <summary>
+        /// Name of the mongoDB collection.
+        /// </summary>
         string CollectionName { get; set; }
+        /// <summary>
+        /// Connectionstring for the mongoDB.
+        /// </summary>
         string ConnectionString { get; set; }
+        /// <summary>
+        /// Name of the database on mongoDB.
+        /// </summary>
         string DatabaseName { get; set; }
 
 

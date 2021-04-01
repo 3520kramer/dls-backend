@@ -30,12 +30,18 @@ namespace SkoleProtokolAPI
         {
 
             // Requires using Microsoft.Extensions.Options
+
+            // Populates the RollCallDatabaseSettings object with data
+            // from the RollCallDatabaseSettings section in the appsettings.json file.
             services.Configure<RollCallDatabaseSettings>(
                 Configuration.GetSection(nameof(RollCallDatabaseSettings)));
 
+            // The IRollCallDatabaseSettings interface is setup for dependency injection as a singleton
+            // and when the IRollCallDatabaseSettings type is injected it will resolve to a RollCallDatabaseSettings object
             services.AddSingleton<IRollCallDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<RollCallDatabaseSettings>>().Value);
 
+            // RollCallService is setup for dependency injection as a singleton.
             services.AddSingleton<RollCallService>();
 
             services.AddControllers();
