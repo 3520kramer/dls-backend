@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using SkoleProtokolAPI.ActiveTimer;
+using SkoleProtokolAPI.Comparers;
 using SkoleProtokolAPI.Generator;
 using SkoleProtokolLibrary.Models;
 
@@ -30,14 +31,23 @@ namespace SkoleProtokolAPI.Controllers
 
         // GET: api/<CodeController>
         /// <summary>
-        /// Starts the process of code generation, stores the generated code in memory for 10 min.
+        /// Starts the process of generating a unique code, stores the generated code in memory for 10 min.
         /// Returns the generated code in a HTTP-response 
         /// </summary>
         /// <returns>The newly generated attendanceCode as a string</returns>
         [HttpGet]
         public string GenerateAttendanceCode()
         {
-            string attendanceCode = AttendanceCodeGenerator.GenerateAttendanceCode();//Generates the code
+            bool isCodeUnique = false;
+            string attendanceCode = "";
+            while (!isCodeUnique)//Ensures the uniqueness of a generated code
+            {
+                attendanceCode = AttendanceCodeGenerator.GenerateAttendanceCode();//Generates the code
+                if (AttendanceCodeComparer.CheckCodeUniqueness(_activeAttendanceCodes, attendanceCode))
+                {
+                    isCodeUnique = true;
+                }
+            }
             //Stores the code in memory
             ActiveAttendanceCode activateCode = new ActiveAttendanceCode(_activeAttendanceCodes, attendanceCode);
             return attendanceCode;
