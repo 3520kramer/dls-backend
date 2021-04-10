@@ -15,7 +15,7 @@ using SkoleProtokolLibrary.Models;
 namespace SkoleProtokolAPI.Controllers
 {
     /// <summary>
-    /// The api controller that handles Attendance codes
+    /// The API controller that handles Attendance codes
     /// </summary>
     [Route("api/AttendanceCode")]
     [ApiController]
@@ -25,7 +25,6 @@ namespace SkoleProtokolAPI.Controllers
         #region InstanceFields
 
         private static readonly ConcurrentQueue<ActiveAttendanceCode> _activeAttendanceCodes = new ConcurrentQueue<ActiveAttendanceCode>();
-        private readonly IMongoCollection<User> _userCollection;
         #endregion
 
 
