@@ -53,8 +53,7 @@ namespace SkoleProtokolAPI.Services
             {
                 if (!courses.Exists(c => c.Title == schoolClass.Course))
                 {
-                    CourseDTO tempCourseDto = new CourseDTO();
-                    tempCourseDto.Title = schoolClass.Course;
+                    CourseDTO tempCourseDto = new CourseDTO(){Title = schoolClass.Course};
                     courses.Add(tempCourseDto);
                 }
             }
