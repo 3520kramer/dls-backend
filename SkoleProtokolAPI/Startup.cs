@@ -41,8 +41,10 @@ namespace SkoleProtokolAPI
             services.AddSingleton<IRollCallDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<RollCallDatabaseSettings>>().Value);
 
-            // RollCallService is setup for dependency injection as a singleton.
-            services.AddSingleton<RollCallService>();
+            // RollCallUsersService is setup for dependency injection as a singleton.
+            services.AddSingleton<RollCallUsersService>();
+            // RollCallClassesService is setup for dependency injection as a singleton.
+            services.AddSingleton<RollCallClassesService>();
 
             services.AddControllers();
 

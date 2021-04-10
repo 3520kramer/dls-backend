@@ -9,9 +9,9 @@ using SkoleProtokolLibrary.Models;
 namespace SkoleProtokolAPI.Services
 {
     /// <summary>
-    /// Interacts with the roll-call mongoDB
+    /// Interacts with the roll-call mongoDB users collection
     /// </summary>
-    public class RollCallService
+    public class RollCallUsersService
     {
 
         #region InstanceFields
@@ -22,17 +22,17 @@ namespace SkoleProtokolAPI.Services
 
         #region Constructor
         /// <summary>
-        /// Initializes a instance on RollCallService and
+        /// Initializes a instance on RollCallUsersService and
         /// retrieves the roll-call database from mongoDB and
         /// extracts the user collection based on the IRollCallDatabaseSettings object.
         /// </summary>
         /// <param name="settings"></param>
-        public RollCallService(IRollCallDatabaseSettings settings)
+        public RollCallUsersService(IRollCallDatabaseSettings settings)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
 
-            _users = database.GetCollection<User>(settings.CollectionName);
+            _users = database.GetCollection<User>(settings.UsersCollection);
         }
 
         #endregion
