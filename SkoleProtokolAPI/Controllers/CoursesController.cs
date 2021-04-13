@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using SkoleProtokolAPI.Services;
 using SkoleProtokolLibrary.DTO;
-using SkoleProtokolLibrary.Models;
+using SkoleProtokolLibrary.DBModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
