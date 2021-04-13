@@ -2,7 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace SkoleProtokolLibrary.Models
+namespace SkoleProtokolLibrary.DBModels
 {
     /// <summary>
     /// Entity model of a user for communication with mongoDB

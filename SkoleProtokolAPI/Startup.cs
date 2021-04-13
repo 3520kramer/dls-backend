@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using SkoleProtokolAPI.Services;
 using SkoleProtokolLibrary.Interfaces;
-using SkoleProtokolLibrary.Models;
+using SkoleProtokolLibrary.DBModels;
 
 namespace SkoleProtokolAPI
 {
