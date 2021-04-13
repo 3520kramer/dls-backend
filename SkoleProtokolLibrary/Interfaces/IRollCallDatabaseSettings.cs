@@ -11,18 +11,27 @@ namespace SkoleProtokolLibrary.Interfaces
     {
 
         #region Properties
+
         /// <summary>
         /// Name of the mongoDB UsersCollection.
         /// </summary>
         public string UsersCollection { get; set; }
+
         /// <summary>
         /// Name of the mongoDB classesCollection
         /// </summary>
         public string ClassesCollection { get; set; }
+
+        /// <summary>
+        /// Name of the mongoDB modulesCollection
+        /// </summary>
+        public string ModulesCollection { get; set; }
+
         /// <summary>
         /// Connectionstring for the mongoDB.
         /// </summary>
         string ConnectionString { get; set; }
+
         /// <summary>
         /// Name of the database on mongoDB.
         /// </summary>
