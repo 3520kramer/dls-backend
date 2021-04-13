@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
+using SkoleProtokolLibrary.Models;
 
 namespace SkoleProtokolAPI.ActiveTimer
 {
@@ -18,6 +19,9 @@ namespace SkoleProtokolAPI.ActiveTimer
         private readonly ConcurrentQueue<ActiveAttendanceCode> _queue; 
         private Timer _timer; //The timer keeps track of remaining active time for the code
         private readonly string _attendanceCode;
+        private readonly Subject _subject = new Subject();
+        private readonly List<SchoolClass> _classes = new List<SchoolClass>();
+        private readonly AdditionalInformation _additionalInformation = new AdditionalInformation();
 
         #endregion
 
@@ -29,6 +33,23 @@ namespace SkoleProtokolAPI.ActiveTimer
         public string AttendanceCode
         {
             get { return _attendanceCode; }
+        }
+
+        // The following properties are used to register information that is related to the code
+        // Such as the subject the code is active for.
+        public Subject Subject
+        {
+            get { return _subject; }
+        }
+
+        public List<SchoolClass> Classes
+        {
+            get { return _classes; }
+        }
+
+        public AdditionalInformation AdditionalInformation
+        {
+            get { return _additionalInformation; }
         }
 
         #endregion

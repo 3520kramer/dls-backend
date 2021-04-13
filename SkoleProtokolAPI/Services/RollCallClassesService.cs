@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using SkoleProtokolLibrary.DTO;
 using SkoleProtokolLibrary.Interfaces;
-using SkoleProtokolLibrary.Models;
+using SkoleProtokolLibrary.DBModels;
 
 namespace SkoleProtokolAPI.Services
 {
@@ -17,7 +17,7 @@ namespace SkoleProtokolAPI.Services
 
         #region InstanceFields
 
-        private readonly IMongoCollection<SchoolClass> _classes;//Collection of classes from the mongoDB.
+        private readonly IMongoCollection<DBSchoolClass> _classes;//Collection of classes from the mongoDB.
 
         #endregion
 
@@ -33,7 +33,7 @@ namespace SkoleProtokolAPI.Services
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
 
-            _classes = database.GetCollection<SchoolClass>(settings.ClassesCollection);
+            _classes = database.GetCollection<DBSchoolClass>(settings.ClassesCollection);
         }
 
         #endregion

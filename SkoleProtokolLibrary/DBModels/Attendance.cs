@@ -1,7 +1,7 @@
 ﻿using System;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace SkoleProtokolLibrary.Models
+namespace SkoleProtokolLibrary.DBModels
 {
     /// <summary>
     /// Holds information regarding a students attendance for a lesson.

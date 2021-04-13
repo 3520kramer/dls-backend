@@ -23,7 +23,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SkoleProtokolAPI.Services;
 using SkoleProtokolLibrary.Interfaces;
-using SkoleProtokolLibrary.Models;
+using SkoleProtokolLibrary.DBModels;
 
 namespace SkoleProtokolAPI
 {

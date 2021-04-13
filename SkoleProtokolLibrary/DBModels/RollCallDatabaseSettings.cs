@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SkoleProtokolLibrary.Interfaces;
 
-namespace SkoleProtokolLibrary.Models
+namespace SkoleProtokolLibrary.DBModels
 {
     /// <summary>
     /// Contains information required to connect to a mongoDB.

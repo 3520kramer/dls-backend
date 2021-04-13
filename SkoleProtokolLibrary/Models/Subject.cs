@@ -5,24 +5,22 @@ using System.Text;
 namespace SkoleProtokolLibrary.Models
 {
     /// <summary>
-    /// SchoolClass that will be connected to an AttendanceCode
+    /// The subject connected to an attendanceCode
     /// </summary>
-    public class SchoolClass
+    public class Subject
     {
 
         #region Properties
 
         /// <summary>
-        /// The id of the class
+        /// The id of the subject
         /// </summary>
         public string Id { get; set; }
 
         /// <summary>
-        /// Name of the class
+        /// The title of the subject
         /// </summary>
         public string Title { get; set; }
-
-
 
         #endregion
 
