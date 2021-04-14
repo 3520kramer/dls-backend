@@ -38,10 +38,10 @@ namespace SkoleProtokolLibrary.DBModels
         public string Email { get; set; }
 
         /// <summary>
-        /// A list of classes the user is connected to.
+        /// A list of subjects and classes related to the subjects
         /// </summary>
-        [BsonElement("classes")]
-        public List<string> Classes { get; set; }
+        [BsonElement("subject")]
+        public List<DBSubject> Subjects { get; set; }
 
         /// <summary>
         /// A list of lessons and whether they were attended.

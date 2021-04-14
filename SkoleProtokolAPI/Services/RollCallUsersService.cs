@@ -42,6 +42,24 @@ namespace SkoleProtokolAPI.Services
         //public List<User> GetAll() =>
         //    _users.Find(user => true).ToList();
 
+        public (List<string> subjects, List<string> classes) GetSubjectsAndClasses(string teacherId)
+        {
+            List<string> subjects = new List<string>();
+            List<string> classes = new List<string>();
+
+            User teacher = _users.Find(user => true).ToList().First(user => user.Id == teacherId);
+
+            for (int index = 0; index < teacher.Subjects.Count; index++)
+            {
+                if (index == 0)
+                {
+                    classes = teacher.Subjects[index].Classes;
+                }
+                subjects.Add(teacher.Subjects[index].Name);
+            }
+
+            return (subjects, classes);
+        }
 
         #endregion
     }
