@@ -11,6 +11,9 @@ using SkoleProtokolLibrary.DTO;
 
 namespace SkoleProtokolAPI.Controllers
 {
+    /// <summary>
+    /// Api controller for RollCall
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class RollCallController : ControllerBase
@@ -41,9 +44,16 @@ namespace SkoleProtokolAPI.Controllers
         //    return new string[] { "value1", "value2" };
         //}
 
+        /// <summary>
+        /// Gets the subjects and the classes for the first of the subjects connected to the teacher.
+        /// Also gets the modules/time intervals that a teacher can select to take roll call for.
+        /// </summary>
+        /// <param name="teacherId">Id of the teacher starting a roll call</param>
+        /// <returns>StartRollCallDTO</returns>
         // GET api/<RollCallController>/5
         [HttpGet]
-        public StartRollCallDTO Get([FromQuery] string teacherId)
+        [Route("InitialInfo")]
+        public StartRollCallDTO GetInitialRollCallInfo([FromQuery] string teacherId)
         {
             (List<string> subjects, List<string> classes)
                 rollCallTuple = _usersService.GetSubjectsAndClasses(teacherId);

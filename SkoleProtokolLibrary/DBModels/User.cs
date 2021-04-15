@@ -32,6 +32,12 @@ namespace SkoleProtokolLibrary.DBModels
         public string LastName { get; set; }
 
         /// <summary>
+        /// Name of the course the user is mainly associated with(Might be deleted).
+        /// </summary>
+        [BsonElement("course")]
+        public string Course { get; set; }
+
+        /// <summary>
         /// Email of the user
         /// </summary>
         [BsonElement("email")]
@@ -40,7 +46,7 @@ namespace SkoleProtokolLibrary.DBModels
         /// <summary>
         /// A list of subjects and classes related to the subjects
         /// </summary>
-        [BsonElement("subject")]
+        [BsonElement("subjects")]
         public List<DBSubject> Subjects { get; set; }
 
         /// <summary>

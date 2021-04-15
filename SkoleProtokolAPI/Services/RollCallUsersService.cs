@@ -26,7 +26,7 @@ namespace SkoleProtokolAPI.Services
         /// retrieves the roll-call database from mongoDB and
         /// extracts the user collection based on the IRollCallDatabaseSettings object.
         /// </summary>
-        /// <param name="settings"></param>
+        /// <param name="settings">Settings for connecting to a mongoDB, is injected automatically</param>
         public RollCallUsersService(IRollCallDatabaseSettings settings)
         {
             var client = new MongoClient(settings.ConnectionString);
@@ -42,6 +42,12 @@ namespace SkoleProtokolAPI.Services
         //public List<User> GetAll() =>
         //    _users.Find(user => true).ToList();
 
+        /// <summary>
+        /// Gets a list of subjects for a teacher and
+        /// a list of the classes that the teacher has in the first subject of the subject list
+        /// </summary>
+        /// <param name="teacherId">The id of the teacher to find subjects and classes for</param>
+        /// <returns>a tuple containing two lists of string</returns>
         public (List<string> subjects, List<string> classes) GetSubjectsAndClasses(string teacherId)
         {
             List<string> subjects = new List<string>();
