@@ -43,8 +43,6 @@ namespace SkoleProtokolAPI
 
             // RollCallUsersService is setup for dependency injection as a singleton.
             services.AddSingleton<RollCallUsersService>();
-            // RollCallClassesService is setup for dependency injection as a singleton.
-            services.AddSingleton<RollCallClassesService>();
             // RollCallModulesService is setup for dependency injection as a singleton.
             services.AddSingleton<RollCallModulesService>();
 

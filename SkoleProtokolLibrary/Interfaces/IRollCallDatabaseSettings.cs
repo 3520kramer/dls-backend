@@ -18,11 +18,6 @@ namespace SkoleProtokolLibrary.Interfaces
         public string UsersCollection { get; set; }
 
         /// <summary>
-        /// Name of the mongoDB classesCollection
-        /// </summary>
-        public string ClassesCollection { get; set; }
-
-        /// <summary>
         /// Name of the mongoDB modulesCollection
         /// </summary>
         public string ModulesCollection { get; set; }

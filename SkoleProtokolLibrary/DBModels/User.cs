@@ -32,16 +32,22 @@ namespace SkoleProtokolLibrary.DBModels
         public string LastName { get; set; }
 
         /// <summary>
+        /// Name of the course the user is mainly associated with(Might be deleted).
+        /// </summary>
+        [BsonElement("course")]
+        public string Course { get; set; }
+
+        /// <summary>
         /// Email of the user
         /// </summary>
         [BsonElement("email")]
         public string Email { get; set; }
 
         /// <summary>
-        /// A list of classes the user is connected to.
+        /// A list of subjects and classes related to the subjects
         /// </summary>
-        [BsonElement("classes")]
-        public List<string> Classes { get; set; }
+        [BsonElement("subjects")]
+        public List<DBSubject> Subjects { get; set; }
 
         /// <summary>
         /// A list of lessons and whether they were attended.
