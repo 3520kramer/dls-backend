@@ -53,7 +53,7 @@ namespace SkoleProtokolAPI.Services
             List<string> subjects = new List<string>();
             List<string> classes = new List<string>();
 
-            User teacher = _users.Find(user => true).ToList().First(user => user.Id == teacherId);
+            User teacher = FindUser(teacherId);
 
             for (int index = 0; index < teacher.Subjects.Count; index++)
             {
@@ -65,6 +65,52 @@ namespace SkoleProtokolAPI.Services
             }
 
             return (subjects, classes);
+        }
+
+        /// <summary>
+        /// Gets a teacher's classes for a specific subject
+        /// </summary>
+        /// <param name="teacherId">The id of the teacher</param>
+        /// <param name="subject">Name of the subject</param>
+        /// <returns>List of strings</returns>
+        public List<string> GetSpecificClasses(string teacherId, string subject)
+        {
+            List<string> classes = new List<string>();
+
+            User teacher = FindUser(teacherId);
+
+            foreach (var dbSubject in teacher.Subjects)
+            {
+                if (string.Equals(dbSubject.Name, subject))
+                {
+                    classes = dbSubject.Classes;
+                    break;
+                }
+            }
+            return classes;
+        }
+
+        #endregion
+
+        #region HelpMethods
+
+        /// <summary>
+        /// Finds and returns one user from the list of users by id.
+        /// </summary>
+        /// <param name="userId">Id of the user to be found</param>
+        /// <returns>User</returns>
+        private User FindUser(string userId)
+        {
+            return GetAllUsers().First(user => user.Id == userId);
+        }
+
+        /// <summary>
+        /// Converts the IMongoCollection of Users to a list.
+        /// </summary>
+        /// <returns>List of Users</returns>
+        private List<User> GetAllUsers()
+        {
+            return _users.Find(user => true).ToList();
         }
 
         #endregion
