@@ -37,12 +37,7 @@ namespace SkoleProtokolAPI.Controllers
 
 
 
-        // GET: api/<RollCallController>
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
+        
 
         /// <summary>
         /// Gets the subjects and the classes for the first of the subjects connected to the teacher.
@@ -68,6 +63,22 @@ namespace SkoleProtokolAPI.Controllers
             //}
 
             return new StartRollCallDTO(rollCallTuple.subjects, rollCallTuple.classes, modules);
+        }
+
+        /// <summary>
+        /// This endpoint is called when the selected subject is changed.
+        /// It responds with the classes associated with a specific teacher and subject.
+        /// </summary>
+        /// <remarks>It should only be called after the initialinfo endpoint has been called</remarks>
+        /// <param name="teacherId">Id of the teacher</param>
+        /// <param name="subject">Name of the subject</param>
+        /// <returns>List of strings</returns>
+        //GET: api/<RollCallController>
+        [HttpGet]
+        [Route("Classes")]
+        public IEnumerable<string> GetClasses([FromQuery] string teacherId, [FromQuery] string subject)
+        {
+            return _usersService.GetSpecificClasses(teacherId, subject);
         }
 
         // POST api/<RollCallController>
