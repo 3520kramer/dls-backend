@@ -81,7 +81,7 @@ namespace SkoleProtokolAPI.Services
 
             foreach (var dbSubject in teacher.Subjects)
             {
-                if (string.Equals(dbSubject.Name, subject))
+                if (string.Equals(dbSubject.Name.ToLower(), subject.ToLower()))
                 {
                     classes = dbSubject.Classes;
                     break;
