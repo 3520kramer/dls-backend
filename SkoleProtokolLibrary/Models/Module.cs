@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SkoleProtokolLibrary.DBModels;
+using SkoleProtokolLibrary.DTO;
 
-namespace SkoleProtokolLibrary.DTO
+namespace SkoleProtokolLibrary.Models
 {
     /// <summary>
-    /// Represents the data for a single module of a lesson.
+    /// Contains data for a single module of a lesson
     /// </summary>
-    public class ModuleDTO
+    public class Module
     {
-
         #region Properities
 
         /// <summary>
@@ -21,21 +20,16 @@ namespace SkoleProtokolLibrary.DTO
         /// <summary>
         /// The time interval for a module
         /// </summary>
-        public TimespanDTO Timespan { get; set; }
+        public Timespan Timespan { get; set; }
 
         #endregion
 
         #region Constructor
 
-        public ModuleDTO()
-        {
-            
-        }
-
-        public ModuleDTO(DBModule module)
+        public Module(ModuleDTO module)
         {
             Id = module.Id;
-            Timespan = new TimespanDTO(module.Timespan);
+            Timespan = new Timespan(module.Timespan);
         }
 
         #endregion

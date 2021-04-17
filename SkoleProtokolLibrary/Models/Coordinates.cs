@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SkoleProtokolLibrary.DTO;
 
 namespace SkoleProtokolLibrary.Models
 {
     /// <summary>
-    /// Additional information associated with an ActiveAttendanceCode, such as coordinates and
-    /// a limit on how many students that can use the code.
+    /// Contains information about the coordinates the code is usable for.
     /// </summary>
-    public class AdditionalInformation
+    public class Coordinates
     {
 
         #region Properties
@@ -23,10 +23,16 @@ namespace SkoleProtokolLibrary.Models
         /// </summary>
         public double Longitude { get; set; }
 
-        /// <summary>
-        /// Number of students the code will be active for
-        /// </summary>
-        public int NumberOfStudents { get; set; }
+        #endregion
+
+        #region Constructor
+
+        public Coordinates(CoordinatesDTO coordinates)
+        {
+            Latitude = coordinates.Latitude;
+            Longitude = coordinates.Longitude;
+        }
+
 
         #endregion
 

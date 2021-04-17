@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SkoleProtokolLibrary.DBModels;
+using SkoleProtokolLibrary.DTO;
 
-namespace SkoleProtokolLibrary.DTO
+namespace SkoleProtokolLibrary.Models
 {
-    public class TimespanDTO
+    public class Timespan
     {
 
         #region Properties
@@ -24,18 +24,14 @@ namespace SkoleProtokolLibrary.DTO
 
         #region Constructor
 
-        public TimespanDTO()
-        {
-            
-        }
-
-        public TimespanDTO(DBTimespan timespan)
+        public Timespan(TimespanDTO timespan)
         {
             Start = timespan.Start;
             End = timespan.End;
         }
 
         #endregion
+
 
     }
 }

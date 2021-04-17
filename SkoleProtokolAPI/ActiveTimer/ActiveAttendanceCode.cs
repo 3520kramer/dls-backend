@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
+using SkoleProtokolLibrary.DTO;
 using SkoleProtokolLibrary.Models;
 
 namespace SkoleProtokolAPI.ActiveTimer
 {
     /// <summary>
-    /// Registers and holds one active attendance code, when the code expires it is automatically removed and deleted
+    /// Registers and holds one active attendance code and related information,
+    /// when the code expires it is automatically removed and deleted
     /// </summary>
     public class ActiveAttendanceCode
     {
@@ -17,11 +19,15 @@ namespace SkoleProtokolAPI.ActiveTimer
         #region InstanceFields
 
         private readonly ConcurrentQueue<ActiveAttendanceCode> _queue; 
-        private Timer _timer; //The timer keeps track of remaining active time for the code
+        private readonly Timer _timer = new Timer(); //The timer keeps track of remaining active time for the code
         private readonly string _attendanceCode;
-        private readonly Subject _subject = new Subject();
-        private readonly List<SchoolClass> _classes = new List<SchoolClass>();
-        private readonly AdditionalInformation _additionalInformation = new AdditionalInformation();
+        private readonly string _teacherId;
+        private readonly string _subject;
+        private readonly List<string> _classes;
+        private readonly List<Module> _modules = new List<Module>();
+        private readonly Coordinates _coordinates;
+        private int _numberOfStudents;
+        private readonly CodeDuration _duration;
 
         #endregion
 
@@ -35,21 +41,44 @@ namespace SkoleProtokolAPI.ActiveTimer
             get { return _attendanceCode; }
         }
 
-        // The following properties are used to register information that is related to the code
+        // The following properties are used to get the information that is related to the code
         // Such as the subject the code is active for.
-        public Subject Subject
+
+        public string TeacherId
+        {
+            get { return _teacherId; }
+        }
+
+        
+        public string Subject
         {
             get { return _subject; }
         }
 
-        public List<SchoolClass> Classes
+        public List<string> Classes
         {
             get { return _classes; }
         }
 
-        public AdditionalInformation AdditionalInformation
+        public List<Module> Modules
         {
-            get { return _additionalInformation; }
+            get { return _modules; }
+        }
+
+        public Coordinates Coordinates
+        {
+            get { return _coordinates; }
+        }
+
+        public int NumberOfStudents
+        {
+            get { return _numberOfStudents; }
+            set { _numberOfStudents = value; }
+        }
+
+        public CodeDuration Duration
+        {
+            get { return _duration; }
         }
 
         #endregion
@@ -60,15 +89,23 @@ namespace SkoleProtokolAPI.ActiveTimer
         /// </summary>
         /// <param name="queue">An external ConcurrentQueue used to store the active codes</param>
         /// <param name="attendanceCode">The active code to be stored in the provided ConcurrentQueue</param>
-        public ActiveAttendanceCode(ConcurrentQueue<ActiveAttendanceCode> queue, string attendanceCode)
+        /// <param name="request">Information used to request the attendanceCode</param>
+        public ActiveAttendanceCode(ConcurrentQueue<ActiveAttendanceCode> queue, string attendanceCode, RequestAttendanceCodeDTO request)
         {
             _queue = queue;
             _attendanceCode = attendanceCode;
+            _teacherId = request.TeacherId;
+            _subject = request.Subject;
+            _classes = request.Classes;
+            request.Modules.ForEach(module => _modules.Add(new Module(module)));
+            _coordinates = new Coordinates(request.Coordinates);
+            _numberOfStudents = request.NumberOfStudents;
+            _duration = new CodeDuration(request.Duration);
 
             queue.Enqueue(this);
 
-            _timer = new Timer();
-            _timer.Interval = 600000;//sets timer to 10 min.
+            
+            _timer.Interval = _duration.Minutes * 60000;//Converts the duration from minutes to milliseconds and sets the timer.
             //DeleteFromActiveCodes is called when the timer expires
             _timer.Elapsed += new ElapsedEventHandler(DeleteFromActiveCodes);
             _timer.Start();
