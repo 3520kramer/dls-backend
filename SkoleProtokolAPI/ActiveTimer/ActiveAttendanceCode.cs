@@ -98,7 +98,10 @@ namespace SkoleProtokolAPI.ActiveTimer
             _subject = request.Subject;
             _classes = request.Classes;
             request.Modules.ForEach(module => _modules.Add(new Module(module)));
-            _coordinates = new Coordinates(request.Coordinates);
+            if (request.Coordinates != null)
+            {
+                _coordinates = new Coordinates(request.Coordinates);
+            }
             _numberOfStudents = request.NumberOfStudents;
             _duration = new CodeDuration(request.Duration);
 
