@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SkoleProtokolAPI.ActiveTimer;
+using SkoleProtokolAPI.Comparers;
+using SkoleProtokolAPI.Generator;
 using SkoleProtokolAPI.Services;
 using SkoleProtokolLibrary.DBModels;
 using SkoleProtokolLibrary.DTO;
@@ -19,6 +23,8 @@ namespace SkoleProtokolAPI.Controllers
     public class RollCallController : ControllerBase
     {
         #region InstanceFields
+
+        private static readonly ConcurrentQueue<ActiveAttendanceCode> _activeAttendanceCodes = new ConcurrentQueue<ActiveAttendanceCode>();
 
         private readonly RollCallUsersService _usersService;
         private readonly RollCallModulesService _modulesService;
@@ -81,22 +87,54 @@ namespace SkoleProtokolAPI.Controllers
             return _usersService.GetSpecificClasses(teacherId, subject);
         }
 
-        // POST api/<RollCallController>
+
+
+        // GET: api/<RollCallController>
+        /// <summary>
+        /// Starts the process of generating a unique code, stores the generated code in memory for a given amount of time.
+        /// Also stores additional information related to the generated code.
+        /// Returns the generated code in a HTTP-response 
+        /// </summary>
+        /// <param name="request">The additional information stored with the code</param>
+        /// <returns>The newly generated attendanceCode as a string</returns>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Route("RequestCode")]
+        public string GenerateAttendanceCode([FromBody] RequestAttendanceCodeDTO request)
         {
+            bool isCodeUnique = false;
+            string attendanceCode = "";
+            while (!isCodeUnique)//Ensures the uniqueness of a generated code
+            {
+                attendanceCode = AttendanceCodeGenerator.GenerateAttendanceCode();//Generates the code
+                if (AttendanceCodeComparer.CheckCodeUniqueness(_activeAttendanceCodes, attendanceCode))
+                {
+                    isCodeUnique = true;
+                }
+            }
+            //Stores the code in memory
+            ActiveAttendanceCode activateCode = new ActiveAttendanceCode(_activeAttendanceCodes, attendanceCode, request);
+            return activateCode.AttendanceCode;
         }
 
-        // PUT api/<RollCallController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
 
-        // DELETE api/<RollCallController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+
+
+        //// POST api/<RollCallController>
+        //[HttpPost]
+        //public void Post([FromBody] string value)
+        //{
+        //}
+
+        //// PUT api/<RollCallController>/5
+        //[HttpPut("{id}")]
+        //public void Put(int id, [FromBody] string value)
+        //{
+        //}
+
+        //// DELETE api/<RollCallController>/5
+        //[HttpDelete("{id}")]
+        //public void Delete(int id)
+        //{
+        //}
     }
 }
