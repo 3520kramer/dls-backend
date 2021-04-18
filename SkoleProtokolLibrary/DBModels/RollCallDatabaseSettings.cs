@@ -23,10 +23,10 @@ namespace SkoleProtokolLibrary.DBModels
         /// </summary>
         public string ModulesCollection { get; set; }
 
-        ///// <summary>
-        ///// Connectionstring for the mongoDB.
-        ///// </summary>
-        //public string ConnectionString { get; set; }
+        /// <summary>
+        /// Connectionstring for the mongoDB.
+        /// </summary>
+        public string ConnectionString { get; set; }
 
         /// <summary>
         /// Name of the database on mongoDB.

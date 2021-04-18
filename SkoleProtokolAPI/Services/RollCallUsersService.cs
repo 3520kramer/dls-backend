@@ -29,7 +29,7 @@ namespace SkoleProtokolAPI.Services
         /// <param name="settings">Settings for connecting to a mongoDB, is injected automatically</param>
         public RollCallUsersService(IRollCallDatabaseSettings settings)
         {
-            var client = new MongoClient(Environment.GetEnvironmentVariable("SkoleprotokolMongoConnection"));
+            var client = new MongoClient(Environment.GetEnvironmentVariable(settings.ConnectionString));
             var database = client.GetDatabase(settings.DatabaseName);
 
             _users = database.GetCollection<User>(settings.UsersCollection);
