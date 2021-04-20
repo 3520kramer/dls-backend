@@ -1,34 +1,43 @@
 ﻿using System;
-using MongoDB.Bson.Serialization.Attributes;
+using System.Collections.Generic;
+using System.Text;
+using SkoleProtokolLibrary.DBModels;
 
-namespace SkoleProtokolLibrary.DBModels
+namespace SkoleProtokolLibrary.DTO
 {
-    /// <summary>
-    /// Entity model for an Attendance object. Holds information regarding a students attendance for a lesson.
-    /// </summary>
-    public class Attendance
+    public class AttendanceDTO
     {
+
         #region Properties
         /// <summary>
         /// 
         /// Date of the lesson.
         /// </summary>
-        [BsonElement("date")]
         public DateTime Date { get; set; }
 
         /// <summary>
         /// The class, attendance is related to.
         /// </summary>
-        [BsonElement("subject")]
         public string Subject { get; set; }
 
         /// <summary>
         /// Is true if the student attended class, false if they did not.
         /// </summary>
-        [BsonElement("attended")]
         public bool Attended { get; set; }
 
+        #endregion
+
+
+        #region Constructor
+
+        public AttendanceDTO(DBAttendance attendance)
+        {
+            Date = attendance.Date;
+            Subject = attendance.Subject;
+            Attended = attendance.Attended;
+        }
 
         #endregion
+
     }
 }

@@ -16,7 +16,7 @@ namespace SkoleProtokolAPI.Services
 
         #region InstanceFields
 
-        private readonly IMongoCollection<User> _users;//Collection of users from the mongoDB.
+        private readonly IMongoCollection<DBUser> _users;//Collection of users from the mongoDB.
 
         #endregion
 
@@ -32,7 +32,7 @@ namespace SkoleProtokolAPI.Services
             var client = new MongoClient(Environment.GetEnvironmentVariable(settings.ConnectionString));
             var database = client.GetDatabase(settings.DatabaseName);
 
-            _users = database.GetCollection<User>(settings.UsersCollection);
+            _users = database.GetCollection<DBUser>(settings.UsersCollection);
         }
 
         #endregion
@@ -53,7 +53,7 @@ namespace SkoleProtokolAPI.Services
             List<string> subjects = new List<string>();
             List<string> classes = new List<string>();
 
-            User teacher = FindUser(teacherId);
+            DBUser teacher = FindUser(teacherId);
 
             for (int index = 0; index < teacher.Subjects.Count; index++)
             {
@@ -77,7 +77,7 @@ namespace SkoleProtokolAPI.Services
         {
             List<string> classes = new List<string>();
 
-            User teacher = FindUser(teacherId);
+            DBUser teacher = FindUser(teacherId);
 
             foreach (var dbSubject in teacher.Subjects)
             {
@@ -90,6 +90,54 @@ namespace SkoleProtokolAPI.Services
             return classes;
         }
 
+        /// <summary>
+        /// Gets a list of students that correspond to the lists of subjects and classes
+        /// </summary>
+        /// <param name="subjects">List of subjects to search for</param>
+        /// <param name="classes">List of classes to search for</param>
+        /// <returns>List of DBUsers</returns>
+        public List<DBUser> GetStudentStatisticData(List<string> subjects, List<string> classes)
+        {
+            List<DBUser> students = new List<DBUser>();
+            List<DBUser> allUsers = GetAllUsers();
+            
+            foreach (DBUser user in allUsers)
+            {
+                int subjectIndex = -1;
+
+                if (user.Role.ToLower() != "student")
+                {
+                    continue;
+                }
+
+                for (int index = 0; index < user.Subjects.Count; index++)
+                {
+                    if (subjects.Contains(user.Subjects[index].Name.ToLower()))
+                    {
+                        subjectIndex = index;
+                        break;
+                    }
+                }
+
+                if (subjectIndex == -1)
+                {
+                    continue;
+                }
+
+                foreach (var @class in user.Subjects[subjectIndex].Classes)
+                {
+                    if (classes.Contains(@class.ToLower()))
+                    {
+                        students.Add(user);
+                        break;
+                    }
+                }
+                
+            }
+
+            return students;
+        }
+
         #endregion
 
         #region HelpMethods
@@ -99,7 +147,7 @@ namespace SkoleProtokolAPI.Services
         /// </summary>
         /// <param name="userId">Id of the user to be found</param>
         /// <returns>User</returns>
-        private User FindUser(string userId)
+        private DBUser FindUser(string userId)
         {
             return GetAllUsers().First(user => user.Id == userId);
         }
@@ -108,7 +156,7 @@ namespace SkoleProtokolAPI.Services
         /// Converts the IMongoCollection of Users to a list.
         /// </summary>
         /// <returns>List of Users</returns>
-        private List<User> GetAllUsers()
+        private List<DBUser> GetAllUsers()
         {
             return _users.Find(user => true).ToList();
         }

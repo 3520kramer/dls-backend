@@ -7,7 +7,7 @@ namespace SkoleProtokolLibrary.DBModels
     /// <summary>
     /// Entity model of a user for communication with mongoDB
     /// </summary>
-    public class User
+    public class DBUser
     {
 
         #region Properties
@@ -53,7 +53,7 @@ namespace SkoleProtokolLibrary.DBModels
         /// A list of lessons and whether they were attended.
         /// </summary>
         [BsonElement("attendance")]
-        public List<Attendance> AttendanceLog { get; set; }
+        public List<DBAttendance> AttendanceLog { get; set; }
 
         /// <summary>
         /// Role of the user.
