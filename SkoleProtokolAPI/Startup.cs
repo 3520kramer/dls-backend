@@ -59,8 +59,10 @@ namespace SkoleProtokolAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(options =>
-                options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(options => options
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .WithOrigins(Configuration.GetValue("FrontendURL", defaultValue: "not found")));
 
             app.UseRouting();
 
