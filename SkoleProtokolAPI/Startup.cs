@@ -54,13 +54,20 @@ namespace SkoleProtokolAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(options =>
-                options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            // Gets the frontendURL from appsettings if we are in development environment. If not it will get it from heroku
+            var frontendURL = env.IsDevelopment() ? Configuration.GetValue("FrontendURL", defaultValue: "not found") : Environment.GetEnvironmentVariable("FrontendURL");
+
+            app.UseCors(options => options
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .WithOrigins(frontendURL));
 
             app.UseRouting();
 
