@@ -21,6 +21,7 @@ WORKDIR /app
 # Setting environmental variables
 ENV ASPNETCORE_ENVIRONMENT=”Development”
 ENV SkoleProtokolMongoConnection=<INSERT CONNECTIONSTRING>
+ENV FrontendURL="http://localhost:3000"
 
 COPY --from=build /app/SkoleProtokolAPI/out ./
 ENTRYPOINT ["dotnet", "SkoleProtokolAPI.dll"]
