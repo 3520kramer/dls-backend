@@ -56,7 +56,7 @@ namespace SkoleProtokolAPI.Services
 
             DBUser teacher = FindUser(teacherId);
 
-            for (int index = 0; index < teacher.Subjects.Count; index++)
+            for (int index = 0; index < teacher?.Subjects.Count; index++)
             {
                 if (index == 0)
                 {
@@ -80,14 +80,16 @@ namespace SkoleProtokolAPI.Services
 
             DBUser teacher = FindUser(teacherId);
 
-            foreach (var dbSubject in teacher.Subjects)
-            {
-                if (string.Equals(dbSubject.Name.ToLower(), subject.ToLower()))
+            if (teacher?.Subjects != null)
+                foreach (var dbSubject in teacher.Subjects)
                 {
-                    classes = dbSubject.Classes;
-                    break;
+                    if (string.Equals(dbSubject.Name.ToLower(), subject.ToLower()))
+                    {
+                        classes = dbSubject.Classes;
+                        break;
+                    }
                 }
-            }
+
             return classes;
         }
 
@@ -96,13 +98,15 @@ namespace SkoleProtokolAPI.Services
         {
             DBUser user = FindUser(studentId);
 
-            foreach (DBAttendance attendance in user.AttendanceLog)
-            {
-                if (attendance.Date == activeAttendanceCode.Duration.Timestamp && attendance.Subject == activeAttendanceCode.Subject)
+            if (user?.AttendanceLog != null)
+                foreach (DBAttendance attendance in user.AttendanceLog)
                 {
-                    attendance.Attended = true;
+                    if (attendance.Date == activeAttendanceCode.Duration.Timestamp &&
+                        attendance.Subject == activeAttendanceCode.Subject)
+                    {
+                        attendance.Attended = true;
+                    }
                 }
-            }
 
             var filter = Builders<DBUser>.Filter.Eq(u => u.Id, studentId);
 
@@ -169,7 +173,17 @@ namespace SkoleProtokolAPI.Services
         /// <returns>User</returns>
         private DBUser FindUser(string userId)
         {
-            return GetAllUsers().First(user => user.Id == userId);
+            DBUser user;
+            //Throws exception if user doesn't exist
+            try
+            {
+                user = GetAllUsers().First(user => user.Id == userId);
+            }
+            catch (InvalidOperationException exception)
+            {
+                user = null;
+            }
+            return user;
         }
 
         /// <summary>

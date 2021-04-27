@@ -117,9 +117,16 @@ namespace SkoleProtokolAPI.Controllers
             return activateCode.AttendanceCode;
         }
 
+        [HttpGet]
+        [Route("Test")]
+        public DateTime trydatetime()
+        {
+            return DateTime.Now;
+        }
+
         [HttpPost]
         [Route("RegisterAttendance")]
-        public string RegisterAttendance([FromBody] RegisterAttendanceDTO registerAttendanceDto)
+        public async Task<string> RegisterAttendance([FromBody] RegisterAttendanceDTO registerAttendanceDto)
         {
             ActiveAttendanceCode activecode = null;
             foreach (ActiveAttendanceCode activeAttendanceCode in _activeAttendanceCodes)
@@ -147,8 +154,8 @@ namespace SkoleProtokolAPI.Controllers
                     return "Invalid Coordinates";
                 }
             }
-
-            string responseMessage = _usersService.RegisterAttendance(registerAttendanceDto.Student_Id, activecode);
+            //Check the student's class
+            string responseMessage = await _usersService.RegisterAttendance(registerAttendanceDto.Student_Id, activecode);
             return responseMessage;
         }
 
