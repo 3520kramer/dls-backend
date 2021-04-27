@@ -10,6 +10,7 @@ using SkoleProtokolAPI.Generator;
 using SkoleProtokolAPI.Services;
 using SkoleProtokolLibrary.DBModels;
 using SkoleProtokolLibrary.DTO;
+using SkoleProtokolLibrary.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -116,6 +117,40 @@ namespace SkoleProtokolAPI.Controllers
             return activateCode.AttendanceCode;
         }
 
+        [HttpPost]
+        [Route("RegisterAttendance")]
+        public string RegisterAttendance([FromBody] RegisterAttendanceDTO registerAttendanceDto)
+        {
+            ActiveAttendanceCode activecode = null;
+            foreach (ActiveAttendanceCode activeAttendanceCode in _activeAttendanceCodes)
+            {
+                if (string.Equals(activeAttendanceCode.AttendanceCode, registerAttendanceDto.AttendanceCode))
+                {
+                    activecode = activeAttendanceCode;
+                    break;
+                }
+                else
+                {
+                    return "Invalid Code";
+                }
+            }
+
+            if (activecode?.Coordinates != null)
+            {
+                if (registerAttendanceDto.Coordinates == null)
+                {
+                    return "Coordinates required";
+                }
+
+                if (!CompareCoordinates(activecode.Coordinates, new Coordinates(registerAttendanceDto.Coordinates)))
+                {
+                    return "Invalid Coordinates";
+                }
+            }
+
+            string responseMessage = _usersService.RegisterAttendance(registerAttendanceDto.Student_Id, activecode);
+            return responseMessage;
+        }
 
 
 
@@ -136,5 +171,25 @@ namespace SkoleProtokolAPI.Controllers
         //public void Delete(int id)
         //{
         //}
+
+        #region HelpMethods
+
+        private bool CompareCoordinates(Coordinates expectedCoordinates, Coordinates actualCoordinates)
+        {
+            if (Math.Abs(expectedCoordinates.Longitude - actualCoordinates.Longitude) > 0.000001)
+            {
+                return false;
+            }
+
+            if (Math.Abs(expectedCoordinates.Latitude - actualCoordinates.Latitude) > 0.000001)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
+
     }
 }

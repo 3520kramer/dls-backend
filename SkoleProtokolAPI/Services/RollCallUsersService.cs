@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using SkoleProtokolAPI.ActiveTimer;
 using SkoleProtokolLibrary.Interfaces;
 using SkoleProtokolLibrary.DBModels;
 
@@ -88,6 +89,25 @@ namespace SkoleProtokolAPI.Services
                 }
             }
             return classes;
+        }
+
+
+        public async Task<string> RegisterAttendance(string studentId, ActiveAttendanceCode activeAttendanceCode)
+        {
+            DBUser user = FindUser(studentId);
+
+            foreach (DBAttendance attendance in user.AttendanceLog)
+            {
+                if (attendance.Date == activeAttendanceCode.Duration.Timestamp && attendance.Subject == activeAttendanceCode.Subject)
+                {
+                    attendance.Attended = true;
+                }
+            }
+
+            var filter = Builders<DBUser>.Filter.Eq(u => u.Id, studentId);
+
+            await _users.ReplaceOneAsync(filter, user);
+            return "Attendance registered";
         }
 
         /// <summary>
