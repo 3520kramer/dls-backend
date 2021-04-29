@@ -128,7 +128,13 @@ namespace SkoleProtokolAPI.Controllers
         [Route("RegisterAttendance")]
         public async Task<string> RegisterAttendance([FromBody] RegisterAttendanceDTO registerAttendanceDto)
         {
+            if (_activeAttendanceCodes.Count < 1)
+            {
+                return "No active Codes";
+            }
+
             ActiveAttendanceCode activecode = null;
+
             foreach (ActiveAttendanceCode activeAttendanceCode in _activeAttendanceCodes)
             {
                 if (string.Equals(activeAttendanceCode.AttendanceCode, registerAttendanceDto.AttendanceCode))
@@ -136,13 +142,14 @@ namespace SkoleProtokolAPI.Controllers
                     activecode = activeAttendanceCode;
                     break;
                 }
-                else
-                {
-                    return "Invalid Code";
-                }
             }
 
-            if (activecode?.Coordinates != null)
+            if (activecode == null)
+            {
+                return "Invalid Code";
+            }
+
+            if (activecode.Coordinates != null)
             {
                 if (registerAttendanceDto.Coordinates == null)
                 {
@@ -154,7 +161,7 @@ namespace SkoleProtokolAPI.Controllers
                     return "Invalid Coordinates";
                 }
             }
-            //Check the student's class
+            
             string responseMessage = await _usersService.RegisterAttendance(registerAttendanceDto.Student_Id, activecode);
             return responseMessage;
         }

@@ -97,6 +97,13 @@ namespace SkoleProtokolAPI.Services
         public async Task<string> RegisterAttendance(string studentId, ActiveAttendanceCode activeAttendanceCode)
         {
             DBUser user = FindUser(studentId);
+            //Check the student's class
+            bool StudentIsAssignedToValidClass = activeAttendanceCode.Classes.Contains(user?.Subjects.Find(s => s.Name == activeAttendanceCode.Subject)?.Classes[0]);
+
+            if (!StudentIsAssignedToValidClass)
+            {
+                return $"Code is not valid for your class";
+            }
 
             if (user?.AttendanceLog != null)
                 foreach (DBAttendance attendance in user.AttendanceLog)
@@ -109,6 +116,16 @@ namespace SkoleProtokolAPI.Services
                 }
 
             var filter = Builders<DBUser>.Filter.Eq(u => u.Id, studentId);
+
+            if (activeAttendanceCode.IsNumberOfStudentsEnabled && activeAttendanceCode.NumberOfStudents < 1)
+            {
+                return "Code has been used up";
+            }
+
+            if (activeAttendanceCode.IsNumberOfStudentsEnabled && activeAttendanceCode.NumberOfStudents > 0)
+            {
+                activeAttendanceCode.NumberOfStudents--;
+            }
 
             await _users.ReplaceOneAsync(filter, user);
             return "Attendance registered";
