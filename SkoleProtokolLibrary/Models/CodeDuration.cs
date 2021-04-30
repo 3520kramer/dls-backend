@@ -30,7 +30,7 @@ namespace SkoleProtokolLibrary.Models
         public CodeDuration(CodeDurationDTO codeDuration)
         {
             Minutes = codeDuration.Minutes;
-            Timestamp = codeDuration.Timestamp;
+            Timestamp = new DateTime(codeDuration.Timestamp.Year, codeDuration.Timestamp.Month, codeDuration.Timestamp.Day, codeDuration.Timestamp.Hour, codeDuration.Timestamp.Minute, codeDuration.Timestamp.Second, codeDuration.Timestamp.Millisecond, DateTimeKind.Utc);
         }
 
         #endregion

@@ -93,6 +93,41 @@ namespace SkoleProtokolAPI.Services
             return classes;
         }
 
+        public async Task PrepareStudentsForAttendance(ActiveAttendanceCode activeAttendanceCode)
+        {
+            List<DBUser> users = GetAllUsers();
+
+            List<DBUser> students = new List<DBUser>();
+
+            foreach (var user in users)
+            {
+                if (user.Role.ToLower() != "student")
+                {
+                    continue;
+                }
+
+                foreach (var subject in user.Subjects)
+                {
+                    if (!string.Equals(subject.Name.ToLower(), activeAttendanceCode.Subject.ToLower()))
+                    {
+                        continue;
+                    }
+
+                    if (activeAttendanceCode.Classes.Contains(subject.Classes[0].ToLower()))
+                    {
+                        students.Add(user);
+                    }
+                }
+            }
+
+            foreach (var student in students)
+            {
+                student.AttendanceLog.Add(new DBAttendance(){Subject = activeAttendanceCode.Subject, Date = activeAttendanceCode.Duration.Timestamp, Attended = false});
+                var filter = Builders<DBUser>.Filter.Eq(u => u.Id, student.Id);
+                await _users.ReplaceOneAsync(filter, student);
+            }
+        }
+
 
         public async Task<string> RegisterAttendance(string studentId, ActiveAttendanceCode activeAttendanceCode)
         {
