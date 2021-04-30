@@ -98,7 +98,7 @@ namespace SkoleProtokolAPI.Services
         {
             DBUser user = FindUser(studentId);
             //Check the student's class
-            bool studentIsAssignedToValidClass = activeAttendanceCode.Classes.Contains(user?.Subjects.Find(s => s.Name == activeAttendanceCode.Subject)?.Classes[0]);
+            bool studentIsAssignedToValidClass = activeAttendanceCode.Classes.Contains(user?.Subjects.Find(s => s.Name == activeAttendanceCode.Subject)?.Classes[0].ToLower());
 
             if (!studentIsAssignedToValidClass)
             {
