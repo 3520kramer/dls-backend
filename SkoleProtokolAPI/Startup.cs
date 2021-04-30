@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using SkoleProtokolAPI.Services;
 using SkoleProtokolLibrary.Interfaces;
 using SkoleProtokolLibrary.DBModels;
+using Okta.AspNetCore;
 
 namespace SkoleProtokolAPI
 {
@@ -46,6 +47,23 @@ namespace SkoleProtokolAPI
             // RollCallModulesService is setup for dependency injection as a singleton.
             services.AddSingleton<RollCallModulesService>();
 
+
+            var test = Configuration.GetSection("Okta").GetValue<string>("OktaDomain");
+
+            // OKTA
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = OktaDefaults.ApiAuthenticationScheme;
+                options.DefaultChallengeScheme = OktaDefaults.ApiAuthenticationScheme;
+                options.DefaultSignInScheme = OktaDefaults.ApiAuthenticationScheme;
+            })
+            .AddOktaWebApi(new OktaWebApiOptions()
+            {
+                OktaDomain = Configuration.GetSection("Okta").GetValue<string>("OktaDomain")
+            });
+            // OKTA
+            services.AddAuthorization();
+
             services.AddControllers();
 
             services.AddCors();
@@ -67,10 +85,14 @@ namespace SkoleProtokolAPI
             app.UseCors(options => options
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                .WithOrigins(frontendURL));
+                .AllowAnyOrigin()
+                .WithOrigins(frontendURL)
+            );
 
             app.UseRouting();
 
+            // Required for OKTA
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
