@@ -11,6 +11,8 @@ using SkoleProtokolAPI.Services;
 using SkoleProtokolLibrary.DBModels;
 using SkoleProtokolLibrary.DTO;
 using SkoleProtokolLibrary.Models;
+using Microsoft.AspNetCore.Authorization;
+using SkoleProtokolLibrary.Helpers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -55,8 +57,12 @@ namespace SkoleProtokolAPI.Controllers
         // GET api/<RollCallController>/5
         [HttpGet]
         [Route("InitialInfo")]
+        //[Authorize]
         public StartRollCallDTO GetInitialRollCallInfo([FromQuery] string teacherId)
         {
+            // Maps the claims from the token into a token object with the desired information
+            var token = new Token(HttpContext.User.Claims);
+
             (List<string> subjects, List<string> classes)
                 rollCallTuple = _usersService.GetSubjectsAndClasses(teacherId);
 
