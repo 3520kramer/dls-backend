@@ -102,7 +102,8 @@ namespace SkoleProtokolAPI.ActiveTimer
             _attendanceCode = attendanceCode;
             _teacherId = request.TeacherId;
             _subject = request.Subject;
-            _classes = request.Classes;
+            _classes = new List<string>();
+            request.Classes.ForEach(c => _classes.Add(c.ToLower()));
             request.Modules.ForEach(module => _modules.Add(new Module(module)));
             if (request.Coordinates != null)
             {

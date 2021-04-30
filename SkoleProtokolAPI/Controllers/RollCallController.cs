@@ -100,7 +100,7 @@ namespace SkoleProtokolAPI.Controllers
         /// <returns>The newly generated attendanceCode as a string</returns>
         [HttpPost]
         [Route("RequestCode")]
-        public string GenerateAttendanceCode([FromBody] RequestAttendanceCodeDTO request)
+        public async Task<string> GenerateAttendanceCode([FromBody] RequestAttendanceCodeDTO request)
         {
             bool isCodeUnique = false;
             string attendanceCode = "";
@@ -112,8 +112,11 @@ namespace SkoleProtokolAPI.Controllers
                     isCodeUnique = true;
                 }
             }
+
+            
             //Stores the code in memory
             ActiveAttendanceCode activateCode = new ActiveAttendanceCode(_activeAttendanceCodes, attendanceCode, request);
+            await _usersService.PrepareStudentsForAttendance(activateCode);
             return activateCode.AttendanceCode;
         }
 
