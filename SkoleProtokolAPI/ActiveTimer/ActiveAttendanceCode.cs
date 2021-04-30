@@ -28,6 +28,7 @@ namespace SkoleProtokolAPI.ActiveTimer
         private readonly Coordinates _coordinates;
         private int _numberOfStudents;
         private readonly CodeDuration _duration;
+        private readonly bool _isNumberOfStudentsEnabled = false;
 
         #endregion
 
@@ -81,6 +82,11 @@ namespace SkoleProtokolAPI.ActiveTimer
             get { return _duration; }
         }
 
+        public bool IsNumberOfStudentsEnabled
+        {
+            get { return _isNumberOfStudentsEnabled; }
+        }
+
         #endregion
 
         #region Constructor
@@ -104,6 +110,10 @@ namespace SkoleProtokolAPI.ActiveTimer
             }
             _numberOfStudents = request.NumberOfStudents;
             _duration = new CodeDuration(request.Duration);
+            if (_numberOfStudents > 0)
+            {
+                _isNumberOfStudentsEnabled = true;
+            }
 
             queue.Enqueue(this);
 

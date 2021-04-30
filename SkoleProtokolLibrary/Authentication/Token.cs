@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Linq;
 
-namespace SkoleProtokolLibrary.Helpers
+namespace SkoleProtokolLibrary.Authentication
 {
     public class Token
     {

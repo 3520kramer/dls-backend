@@ -10,8 +10,9 @@ using SkoleProtokolAPI.Generator;
 using SkoleProtokolAPI.Services;
 using SkoleProtokolLibrary.DBModels;
 using SkoleProtokolLibrary.DTO;
+using SkoleProtokolLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
-using SkoleProtokolLibrary.Helpers;
+using SkoleProtokolLibrary.Authentication;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -122,6 +123,54 @@ namespace SkoleProtokolAPI.Controllers
             return activateCode.AttendanceCode;
         }
 
+        [HttpGet]
+        [Route("Test")]
+        public DateTime trydatetime()
+        {
+            return DateTime.Now;
+        }
+
+        [HttpPost]
+        [Route("RegisterAttendance")]
+        public async Task<string> RegisterAttendance([FromBody] RegisterAttendanceDTO registerAttendanceDto)
+        {
+            if (_activeAttendanceCodes.Count < 1)
+            {
+                return "No active Codes";
+            }
+
+            ActiveAttendanceCode activecode = null;
+
+            foreach (ActiveAttendanceCode activeAttendanceCode in _activeAttendanceCodes)
+            {
+                if (string.Equals(activeAttendanceCode.AttendanceCode, registerAttendanceDto.AttendanceCode))
+                {
+                    activecode = activeAttendanceCode;
+                    break;
+                }
+            }
+
+            if (activecode == null)
+            {
+                return "Invalid Code";
+            }
+
+            if (activecode.Coordinates != null)
+            {
+                if (registerAttendanceDto.Coordinates == null)
+                {
+                    return "Coordinates required";
+                }
+
+                if (!CompareCoordinates(activecode.Coordinates, new Coordinates(registerAttendanceDto.Coordinates)))
+                {
+                    return "Invalid Coordinates";
+                }
+            }
+            
+            string responseMessage = await _usersService.RegisterAttendance(registerAttendanceDto.Student_Id, activecode);
+            return responseMessage;
+        }
 
 
 
@@ -142,5 +191,25 @@ namespace SkoleProtokolAPI.Controllers
         //public void Delete(int id)
         //{
         //}
+
+        #region HelpMethods
+
+        private bool CompareCoordinates(Coordinates expectedCoordinates, Coordinates actualCoordinates)
+        {
+            if (Math.Abs(expectedCoordinates.Longitude - actualCoordinates.Longitude) > 0.000001)
+            {
+                return false;
+            }
+
+            if (Math.Abs(expectedCoordinates.Latitude - actualCoordinates.Latitude) > 0.000001)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
+
     }
 }

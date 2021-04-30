@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using SkoleProtokolAPI.ActiveTimer;
 using SkoleProtokolLibrary.Interfaces;
 using SkoleProtokolLibrary.DBModels;
 
@@ -55,7 +56,7 @@ namespace SkoleProtokolAPI.Services
 
             DBUser teacher = FindUser(teacherId);
 
-            for (int index = 0; index < teacher.Subjects.Count; index++)
+            for (int index = 0; index < teacher?.Subjects.Count; index++)
             {
                 if (index == 0)
                 {
@@ -79,15 +80,55 @@ namespace SkoleProtokolAPI.Services
 
             DBUser teacher = FindUser(teacherId);
 
-            foreach (var dbSubject in teacher.Subjects)
-            {
-                if (string.Equals(dbSubject.Name.ToLower(), subject.ToLower()))
+            if (teacher?.Subjects != null)
+                foreach (var dbSubject in teacher.Subjects)
                 {
-                    classes = dbSubject.Classes;
-                    break;
+                    if (string.Equals(dbSubject.Name.ToLower(), subject.ToLower()))
+                    {
+                        classes = dbSubject.Classes;
+                        break;
+                    }
                 }
-            }
+
             return classes;
+        }
+
+
+        public async Task<string> RegisterAttendance(string studentId, ActiveAttendanceCode activeAttendanceCode)
+        {
+            DBUser user = FindUser(studentId);
+            //Check the student's class
+            bool studentIsAssignedToValidClass = activeAttendanceCode.Classes.Contains(user?.Subjects.Find(s => s.Name == activeAttendanceCode.Subject)?.Classes[0]);
+
+            if (!studentIsAssignedToValidClass)
+            {
+                return $"Code is not valid for your class";
+            }
+
+            if (user?.AttendanceLog != null)
+                foreach (DBAttendance attendance in user.AttendanceLog)
+                {
+                    if (attendance.Date == activeAttendanceCode.Duration.Timestamp &&
+                        attendance.Subject == activeAttendanceCode.Subject)
+                    {
+                        attendance.Attended = true;
+                    }
+                }
+
+            var filter = Builders<DBUser>.Filter.Eq(u => u.Id, studentId);
+
+            if (activeAttendanceCode.IsNumberOfStudentsEnabled && activeAttendanceCode.NumberOfStudents < 1)
+            {
+                return "Code has been used up";
+            }
+
+            if (activeAttendanceCode.IsNumberOfStudentsEnabled && activeAttendanceCode.NumberOfStudents > 0)
+            {
+                activeAttendanceCode.NumberOfStudents--;
+            }
+
+            await _users.ReplaceOneAsync(filter, user);
+            return "Attendance registered";
         }
 
         /// <summary>
@@ -149,7 +190,17 @@ namespace SkoleProtokolAPI.Services
         /// <returns>User</returns>
         private DBUser FindUser(string userId)
         {
-            return GetAllUsers().First(user => user.Id == userId);
+            DBUser user;
+            //Throws exception if user doesn't exist
+            try
+            {
+                user = GetAllUsers().First(user => user.Id == userId);
+            }
+            catch (InvalidOperationException exception)
+            {
+                user = null;
+            }
+            return user;
         }
 
         /// <summary>
