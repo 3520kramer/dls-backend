@@ -12,7 +12,7 @@ using SkoleProtokolLibrary.DBModels;
 using SkoleProtokolLibrary.DTO;
 using SkoleProtokolLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
-using SkoleProtokolLibrary.Helpers;
+using SkoleProtokolLibrary.Authentication;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
