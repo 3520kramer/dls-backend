@@ -126,13 +126,6 @@ namespace SkoleProtokolAPI.Controllers
             return activateCode.AttendanceCode;
         }
 
-        [HttpGet]
-        [Route("Test")]
-        public DateTime trydatetime()
-        {
-            return DateTime.Now;
-        }
-
         [HttpPost]
         [Route("RegisterAttendance")]
         public async Task<string> RegisterAttendance([FromBody] RegisterAttendanceDTO registerAttendanceDto)
