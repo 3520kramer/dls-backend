@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using SkoleProtokolAPI.Services;
 using SkoleProtokolLibrary.DTO;
 
@@ -32,6 +33,7 @@ namespace SkoleProtokolAPI.Controllers
 
         // GET: api/<StatisticsController>?subject=Development%20of%20Large%20Systems&subject=Test&class=w2&class=w1
         [HttpGet]
+        [Authorize]
         public IEnumerable<UserDTO> GetStudentStatistics([FromQuery(Name = "Subject")] List<string> subjects, [FromQuery(Name = "Class")] List<string> classes)
         {
             List<UserDTO> students = new List<UserDTO>();
