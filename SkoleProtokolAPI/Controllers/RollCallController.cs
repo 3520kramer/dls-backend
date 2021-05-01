@@ -57,14 +57,14 @@ namespace SkoleProtokolAPI.Controllers
         // GET api/<RollCallController>/5
         [HttpGet]
         [Route("InitialInfo")]
-        //[Authorize]
-        public StartRollCallDTO GetInitialRollCallInfo([FromQuery] string teacherId)
+        [Authorize]
+        public StartRollCallDTO GetInitialRollCallInfo()
         {
             // Maps the claims from the token into a token object with the desired information
             var token = new Token(HttpContext.User.Claims);
 
             (List<string> subjects, List<string> classes)
-                rollCallTuple = _usersService.GetSubjectsAndClasses(teacherId);
+                rollCallTuple = _usersService.GetSubjectsAndClasses(token.UserId);
 
             List<ModuleDTO> modules = new List<ModuleDTO>();
 
@@ -89,9 +89,11 @@ namespace SkoleProtokolAPI.Controllers
         //GET: api/<RollCallController>
         [HttpGet]
         [Route("Classes")]
-        public IEnumerable<string> GetClasses([FromQuery] string teacherId, [FromQuery] string subject)
+        [Authorize]
+        public IEnumerable<string> GetClasses([FromQuery] string subject)
         {
-            return _usersService.GetSpecificClasses(teacherId, subject);
+            var token = new Token(HttpContext.User.Claims);
+            return _usersService.GetSpecificClasses(token.UserId, subject);
         }
 
 
@@ -106,8 +108,13 @@ namespace SkoleProtokolAPI.Controllers
         /// <returns>The newly generated attendanceCode as a string</returns>
         [HttpPost]
         [Route("RequestCode")]
+        [Authorize]
         public async Task<string> GenerateAttendanceCode([FromBody] RequestAttendanceCodeDTO request)
         {
+            var token = new Token(HttpContext.User.Claims);
+
+            request.TeacherId = token.UserId;
+
             bool isCodeUnique = false;
             string attendanceCode = "";
             while (!isCodeUnique)//Ensures the uniqueness of a generated code
@@ -128,8 +135,13 @@ namespace SkoleProtokolAPI.Controllers
 
         [HttpPost]
         [Route("RegisterAttendance")]
+        [Authorize]
         public async Task<string> RegisterAttendance([FromBody] RegisterAttendanceDTO registerAttendanceDto)
         {
+            var token = new Token(HttpContext.User.Claims);
+
+            registerAttendanceDto.Student_Id = token.UserId;
+
             if (_activeAttendanceCodes.Count < 1)
             {
                 return "No active Codes";
