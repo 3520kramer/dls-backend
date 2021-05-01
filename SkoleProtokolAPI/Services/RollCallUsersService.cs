@@ -146,11 +146,15 @@ namespace SkoleProtokolAPI.Services
                     if (attendance.Date == activeAttendanceCode.Duration.Timestamp &&
                         attendance.Subject.ToLower() == activeAttendanceCode.Subject.ToLower())
                     {
+                        if (attendance.Attended)
+                        {
+                            return "Attendance has already been registered. Can't use the same code again";
+                        }
                         attendance.Attended = true;
                     }
                 }
 
-            var filter = Builders<DBUser>.Filter.Eq(u => u.Id, studentId);
+            
 
             if (activeAttendanceCode.IsNumberOfStudentsEnabled && activeAttendanceCode.NumberOfStudents < 1)
             {
@@ -162,6 +166,7 @@ namespace SkoleProtokolAPI.Services
                 activeAttendanceCode.NumberOfStudents--;
             }
 
+            var filter = Builders<DBUser>.Filter.Eq(u => u.Id, studentId);
             await _users.ReplaceOneAsync(filter, user);
             return "Attendance registered";
         }
