@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Geolocation;
 using SkoleProtokolAPI.ActiveTimer;
 using SkoleProtokolAPI.Comparers;
 using SkoleProtokolAPI.Generator;
@@ -204,15 +205,23 @@ namespace SkoleProtokolAPI.Controllers
 
         private bool CompareCoordinates(Coordinates expectedCoordinates, Coordinates actualCoordinates)
         {
-            if (Math.Abs(expectedCoordinates.Longitude - actualCoordinates.Longitude) > 0.000001)
+            double distance = GeoCalculator.GetDistance(expectedCoordinates.Latitude, expectedCoordinates.Longitude,
+                actualCoordinates.Latitude, actualCoordinates.Longitude, 1, DistanceUnit.Meters);
+
+            if (distance > 100.0)
             {
                 return false;
             }
 
-            if (Math.Abs(expectedCoordinates.Latitude - actualCoordinates.Latitude) > 0.000001)
-            {
-                return false;
-            }
+            //if (Math.Abs(expectedCoordinates.Longitude - actualCoordinates.Longitude) > 0.000001)
+            //{
+            //    return false;
+            //}
+
+            //if (Math.Abs(expectedCoordinates.Latitude - actualCoordinates.Latitude) > 0.000001)
+            //{
+            //    return false;
+            //}
 
             return true;
         }
